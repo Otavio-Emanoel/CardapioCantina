@@ -84,9 +84,11 @@ export default function OpenGraphImage() {
           </div>
         </div>
 
-        <div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
           <div
             style={{
+              display: "flex",
+              flexDirection: "column",
               fontSize: 56,
               fontWeight: 900,
               letterSpacing: "-1.6px",
@@ -94,9 +96,8 @@ export default function OpenGraphImage() {
               maxWidth: 900,
             }}
           >
-            Bebidas e porções
-            <br />
-            rápido no celular
+            <div>Bebidas e porções</div>
+            <div>rápido no celular</div>
           </div>
           <div
             style={{
