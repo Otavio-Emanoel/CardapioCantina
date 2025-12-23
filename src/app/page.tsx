@@ -1,36 +1,10 @@
+"use client";
+
 import Image from "next/image";
+import Link from "next/link";
+import { useMemo, useState } from "react";
 
-type MenuItem = {
-  name: string;
-  price: string;
-};
-
-const bebidas: MenuItem[] = [
-  { name: "Água sem / com gás", price: "R$ 6,00" },
-  { name: "Balde de gelo", price: "R$ 6,00" },
-  { name: "Cerveja lata", price: "R$ 9,00" },
-  { name: "Cerveja long neck", price: "R$ 13,00" },
-  { name: "Caipirinha de pinga", price: "R$ 25,00" },
-  { name: "Caipirinha de vodka", price: "R$ 30,00" },
-  { name: "Gatorade / H2O", price: "R$ 9,00" },
-  { name: "Refrigerante", price: "R$ 8,00" },
-];
-
-const porcoes: MenuItem[] = [
-  { name: "Almôndega", price: "R$ 46,00" },
-  { name: "Bolinho de queijo", price: "R$ 36,00" },
-  { name: "Bolinho bacalhau", price: "R$ 61,00" },
-  { name: "Calabresa", price: "R$ 46,00" },
-  { name: "Camarão", price: "R$ 61,00" },
-  { name: "Coxinha", price: "R$ 36,00" },
-  { name: "Fritas", price: "R$ 36,00" },
-  { name: "Mandioca", price: "R$ 36,00" },
-  { name: "Nuggets / Smiles", price: "R$ 36,00" },
-  { name: "Pastelzinho", price: "R$ 36,00" },
-  { name: "Polenta", price: "R$ 36,00" },
-  { name: "Kibe", price: "R$ 46,00" },
-  { name: "Isca de peixe", price: "R$ 61,00" },
-];
+import { allItems, bebidas, porcoes, slugify, type MenuItem, type ProductCategory } from "@/lib/menu";
 
 function IconDrink() {
   return (
@@ -154,23 +128,54 @@ function SectionTitle({
   );
 }
 
+function FilterChip({
+  active,
+  label,
+  onClick,
+}: {
+  active: boolean;
+  label: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={
+        "inline-flex items-center justify-center rounded-full border px-4 py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background " +
+        (active
+          ? "border-transparent bg-primary text-primary-foreground"
+          : "border-border bg-card text-foreground hover:bg-muted/40")
+      }
+    >
+      {label}
+    </button>
+  );
+}
+
 function ProductCard({
   item,
-  badge,
   icon,
 }: {
   item: MenuItem;
-  badge: string;
   icon: React.ReactNode;
 }) {
+  const badgeLabel = item.category === "bebidas" ? "Bebida" : "Porção";
+  const badgeDotClass = item.category === "bebidas" ? "bg-primary" : "bg-accent";
+
   return (
     <article className="group overflow-hidden rounded-3xl border border-border bg-card shadow-sm transition-transform hover:-translate-y-0.5">
-      <div className="relative h-36">
-        <div className="absolute inset-0 bg-muted" />
-        <div className="absolute inset-0 opacity-70 [background:radial-gradient(600px_220px_at_70%_0%,color-mix(in_oklab,var(--primary)_22%,transparent)_0%,transparent_55%),radial-gradient(500px_220px_at_10%_100%,color-mix(in_oklab,var(--accent)_20%,transparent)_0%,transparent_60%)]" />
+      <div className="relative aspect-square w-full bg-muted">
+        <Image
+          src={item.imageSrc}
+          alt={item.name}
+          fill
+          sizes="(max-width: 640px) 100vw, 360px"
+          className="object-contain"
+        />
         <div className="absolute left-4 top-4 inline-flex items-center gap-2 rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-semibold text-foreground backdrop-blur">
-          <span className="h-2 w-2 rounded-full bg-accent" />
-          {badge}
+          <span className={`h-2 w-2 rounded-full ${badgeDotClass}`} />
+          {badgeLabel}
         </div>
         <div className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-2xl bg-background/70 backdrop-blur">
           {icon}
@@ -183,31 +188,60 @@ function ProductCard({
           {item.name}
         </h3>
         <div className="mt-4 flex items-center justify-between gap-3">
-          <a
-            href="#cardapio"
-            className="text-xs font-semibold text-muted-foreground underline-offset-4 hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-card"
-          >
-            Ver no cardápio
-          </a>
           <span className="inline-flex items-center rounded-xl bg-muted px-3 py-2 text-xs font-semibold text-foreground">
             Disponível
           </span>
+          <Link
+            href={`/produto/${slugify(item.name)}`}
+            className="inline-flex items-center justify-center rounded-2xl bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground shadow-sm transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-card active:translate-y-0"
+          >
+            Ver mais
+          </Link>
         </div>
       </div>
     </article>
   );
 }
 
-const destaques: Array<{ item: MenuItem; badge: string; icon: React.ReactNode }> = [
-  { item: bebidas[0], badge: "Bebida", icon: <IconDrink /> },
-  { item: bebidas[3], badge: "Bebida", icon: <IconDrink /> },
-  { item: bebidas[5], badge: "Bebida", icon: <IconDrink /> },
-  { item: porcoes[0], badge: "Porção", icon: <IconSnack /> },
-  { item: porcoes[3], badge: "Porção", icon: <IconSnack /> },
-  { item: porcoes[7], badge: "Porção", icon: <IconSnack /> },
+function pickByName(items: MenuItem[], name: string): MenuItem {
+  return items.find((item) => item.name === name) ?? items[0]!;
+}
+
+const destaques: MenuItem[] = [
+  pickByName(bebidas, "Cerveja long neck"),
+  pickByName(bebidas, "Caipirinha de vodka"),
+  pickByName(bebidas, "Gatorade"),
+  pickByName(porcoes, "Almôndega"),
+  pickByName(porcoes, "Calabresa"),
+  pickByName(porcoes, "Fritas"),
 ];
 
 export default function Home() {
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState<ProductCategory | "all">("all");
+
+  const normalizedQuery = query.trim().toLowerCase();
+
+  const filteredItems = useMemo(() => {
+    return allItems.filter((item) => {
+      if (category !== "all" && item.category !== category) return false;
+      if (!normalizedQuery) return true;
+
+      const haystack = `${item.name} ${item.price}`.toLowerCase();
+      return haystack.includes(normalizedQuery);
+    });
+  }, [category, normalizedQuery]);
+
+  const filteredBebidas = useMemo(
+    () => filteredItems.filter((i) => i.category === "bebidas"),
+    [filteredItems],
+  );
+
+  const filteredPorcoes = useMemo(
+    () => filteredItems.filter((i) => i.category === "porcoes"),
+    [filteredItems],
+  );
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="mx-auto w-full max-w-6xl px-4 pt-8 sm:px-6 lg:px-8">
@@ -225,7 +259,9 @@ export default function Home() {
             </div>
             <div className="leading-tight">
               <p className="text-xs font-semibold text-primary">Cardápio</p>
-              <p className="text-sm font-semibold tracking-tight">Cantina Bouga 1</p>
+              <p className="text-sm font-semibold tracking-tight">
+                Cantina Bougainville 1
+              </p>
             </div>
           </div>
 
@@ -233,7 +269,6 @@ export default function Home() {
             <NavLink href="#destaques" label="Top produtos" />
             <NavLink href="#bebidas" label="Bebidas" />
             <NavLink href="#porcoes" label="Porções" />
-            <NavLink href="#cardapio" label="Foto do cardápio" />
           </nav>
         </div>
       </header>
@@ -249,40 +284,49 @@ export default function Home() {
               Seu cardápio, bonito e rápido
             </h1>
             <p className="mt-4 max-w-prose text-sm text-muted-foreground sm:text-base">
-              Bebidas e porções da Cantina Bouga 1 em um layout mais moderno,
-              organizado e fácil de consultar.
+              Bebidas e porções da Cantina Bougainville 1 em um layout mais
+              moderno, organizado e fácil de consultar.
             </p>
 
             <div className="mt-7 flex flex-wrap gap-3">
               <PrimaryButton href="#destaques" label="Ver top produtos" />
-              <SecondaryButton href="#cardapio" label="Abrir foto do cardápio" />
+              <SecondaryButton href="#itens" label="Ver todos os itens" />
             </div>
           </div>
 
           <div className="relative overflow-hidden rounded-[2.25rem] border border-border bg-card shadow-sm">
             <div className="absolute inset-0 opacity-60 [background:radial-gradient(900px_420px_at_20%_0%,color-mix(in_oklab,var(--primary)_18%,transparent)_0%,transparent_60%),radial-gradient(700px_360px_at_80%_100%,color-mix(in_oklab,var(--accent)_18%,transparent)_0%,transparent_60%)]" />
             <div className="relative p-4 sm:p-6">
-              <div className="relative aspect-[16/10] overflow-hidden rounded-3xl border border-border bg-muted">
-                <Image
-                  src="/cardapio.jpeg"
-                  alt="Imagem do cardápio da Cantina Bouga 1"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 560px"
-                  className="object-cover"
-                  priority
-                />
+              <div className="grid grid-cols-2 gap-3">
+                {[bebidas[3], bebidas[6], porcoes[9], porcoes[0]].map((item) => (
+                  <div
+                    key={item.name}
+                    className="overflow-hidden rounded-3xl border border-border bg-muted"
+                  >
+                    <div className="relative aspect-square w-full">
+                      <Image
+                        src={item.imageSrc}
+                        alt={item.name}
+                        fill
+                        sizes="(max-width: 1024px) 50vw, 260px"
+                        className="object-contain"
+                        priority
+                      />
+                    </div>
+                  </div>
+                ))}
               </div>
 
               <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="text-sm font-semibold">Cantina Bouga 1</p>
+                  <p className="text-sm font-semibold">Cantina Bougainville 1</p>
                   <p className="text-xs text-muted-foreground">
-                    Consulta rápida do cardápio
+                    Fotos reais dos itens
                   </p>
                 </div>
                 <div className="inline-flex items-center gap-2 rounded-2xl border border-border bg-background/70 px-4 py-2 text-xs font-semibold text-muted-foreground backdrop-blur">
                   <span className="h-2 w-2 rounded-full bg-primary" />
-                  Atualizado
+                  Itens
                 </div>
               </div>
             </div>
@@ -290,7 +334,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="destaques" className="mx-auto w-full max-w-6xl px-4 pb-14 sm:px-6 lg:px-8">
+      <section id="destaques" className="mx-auto w-full max-w-6xl px-4 pb-10 sm:px-6 lg:px-8">
         <SectionTitle
           eyebrow="Top produtos"
           title="Alguns destaques do cardápio"
@@ -298,9 +342,55 @@ export default function Home() {
         />
 
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {destaques.map(({ item, badge, icon }) => (
-            <ProductCard key={`${badge}-${item.name}`} item={item} badge={badge} icon={icon} />
+          {destaques.map((item) => (
+            <ProductCard
+              key={item.name}
+              item={item}
+              icon={item.category === "bebidas" ? <IconDrink /> : <IconSnack />}
+            />
           ))}
+        </div>
+      </section>
+
+      <section id="itens" className="mx-auto w-full max-w-6xl px-4 pb-10 sm:px-6 lg:px-8">
+        <SectionTitle
+          eyebrow="Itens"
+          title="Encontre seu pedido"
+          subtitle="Pesquise pelo nome e filtre por categoria para achar rápido."
+        />
+
+        <div className="mx-auto mt-6 max-w-3xl rounded-[2rem] border border-border bg-card p-4 sm:p-5">
+          <label className="block text-sm font-semibold text-foreground">
+            Pesquisar
+          </label>
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Ex.: cerveja, caipirinha, fritas..."
+            className="mt-2 w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none ring-0 placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary/40"
+          />
+
+          <div className="mt-4 flex flex-wrap gap-2">
+            <FilterChip
+              active={category === "all"}
+              label="Todos"
+              onClick={() => setCategory("all")}
+            />
+            <FilterChip
+              active={category === "bebidas"}
+              label="Bebidas"
+              onClick={() => setCategory("bebidas")}
+            />
+            <FilterChip
+              active={category === "porcoes"}
+              label="Porções"
+              onClick={() => setCategory("porcoes")}
+            />
+          </div>
+
+          <p className="mt-4 text-sm text-muted-foreground">
+            {filteredItems.length} item(ns) encontrado(s)
+          </p>
         </div>
       </section>
 
@@ -311,8 +401,8 @@ export default function Home() {
           subtitle="Todas as bebidas do cardápio, em cards para ficar fácil de ler."
         />
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {bebidas.map((item) => (
-            <ProductCard key={item.name} item={item} badge="Bebida" icon={<IconDrink />} />
+          {filteredBebidas.map((item) => (
+            <ProductCard key={item.name} item={item} icon={<IconDrink />} />
           ))}
         </div>
       </section>
@@ -324,45 +414,14 @@ export default function Home() {
           subtitle="Todas as porções do cardápio, com o preço sempre visível."
         />
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {porcoes.map((item) => (
-            <ProductCard key={item.name} item={item} badge="Porção" icon={<IconSnack />} />
+          {filteredPorcoes.map((item) => (
+            <ProductCard key={item.name} item={item} icon={<IconSnack />} />
           ))}
         </div>
       </section>
 
-      <section id="cardapio" className="mx-auto w-full max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
-        <div className="rounded-[2rem] border border-border bg-card p-6 shadow-sm">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <h2 className="text-lg font-semibold tracking-tight">Foto do cardápio</h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Referência para conferir nomes e valores rapidamente.
-              </p>
-            </div>
-            <a
-              href="#"
-              className="text-sm font-semibold text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-card"
-            >
-              Voltar ao topo
-            </a>
-          </div>
-
-          <div className="mt-5 overflow-hidden rounded-3xl border border-border bg-background">
-            <div className="relative aspect-[3/4] w-full">
-              <Image
-                src="/cardapio.jpeg"
-                alt="Foto do cardápio da Cantina Bouga 1"
-                fill
-                sizes="(max-width: 640px) 100vw, 720px"
-                className="object-cover"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
       <footer className="pb-10 text-center text-sm text-muted-foreground">
-        Cantina Bouga 1 • Cardápio
+        Cantina Bougainville 1 • Cardápio
       </footer>
     </div>
   );

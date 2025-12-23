@@ -2,16 +2,16 @@
 
 :root {
   /* Rosa pastel (claro) */
-  --background: #fff5f7;
-  --foreground: #231018;
+  --background: #fff7fa;
+  --foreground: #200d15;
   --card: #ffffff;
-  --muted: #ffe6ee;
-  --muted-foreground: #6a3b4c;
-  --primary: #e85a8d;
+  --muted: #ffe8f0;
+  --muted-foreground: #6b3a4d;
+  --primary: #ea4c89;
   --primary-foreground: #fff7fa;
-  --accent: #ff9fba;
+  --accent: #ffb1c7;
   --accent-foreground: #2b0b14;
-  --border: #f4c9d6;
+  --border: #f5c7d6;
 }
 
 @theme inline {
@@ -32,16 +32,16 @@
 @media (prefers-color-scheme: dark) {
   :root {
     /* Rosa pastel (escuro) */
-    --background: #13070d;
-    --foreground: #fff2f6;
-    --card: #1a0b12;
-    --muted: #2a0f1c;
-    --muted-foreground: #f1b9cc;
-    --primary: #ff7faa;
-    --primary-foreground: #1a0b12;
-    --accent: #ffb1c6;
-    --accent-foreground: #1a0b12;
-    --border: #3a1424;
+    --background: #12060d;
+    --foreground: #fff2f7;
+    --card: #190a12;
+    --muted: #2a0f1d;
+    --muted-foreground: #f2b9cf;
+    --primary: #ff6ea7;
+    --primary-foreground: #190a12;
+    --accent: #ffb6cd;
+    --accent-foreground: #190a12;
+    --border: #3b1425;
   }
 }
 

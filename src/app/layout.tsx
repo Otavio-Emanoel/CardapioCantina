@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Cantina Bouga 1 | Cardápio Praia",
-  description: "Cardápio da praia da Cantina Bouga 1 com bebidas e porções.",
+  title: "Cantina Bougainville 1 | Cardápio",
+  description:
+    "Cardápio da Cantina Bougainville 1 com bebidas e porções.",
 };
 
 export default function RootLayout({
