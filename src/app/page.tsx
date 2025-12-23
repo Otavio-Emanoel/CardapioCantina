@@ -286,11 +286,26 @@ export default function Home() {
             </div>
           </div>
 
-          <nav className="hidden items-center gap-6 sm:flex">
-            <NavLink href="#destaques" label="Top produtos" />
-            <NavLink href="#bebidas" label="Bebidas" />
-            <NavLink href="#porcoes" label="Porções" />
-          </nav>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/precos"
+              className="inline-flex items-center justify-center rounded-2xl bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground shadow-sm transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background active:translate-y-0 sm:hidden"
+            >
+              Tabela de preços
+            </Link>
+
+            <nav className="hidden items-center gap-6 sm:flex">
+              <a
+                href="/precos"
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                Preços
+              </a>
+              <NavLink href="#destaques" label="Top produtos" />
+              <NavLink href="#bebidas" label="Bebidas" />
+              <NavLink href="#porcoes" label="Porções" />
+            </nav>
+          </div>
         </div>
       </header>
 
@@ -311,7 +326,7 @@ export default function Home() {
 
             <div className="mt-7 flex flex-wrap gap-3">
               <PrimaryButton href="#destaques" label="Ver top produtos" />
-              <SecondaryButton href="#itens" label="Ver todos os itens" />
+              <SecondaryButton href="/precos" label="Tabela de preços" />
             </div>
 
             <div className="mt-8">
