@@ -288,13 +288,25 @@ export default function Home() {
 
           <div className="flex items-center gap-3">
             <Link
-              href="/precos"
+              href="/pedido"
               className="inline-flex items-center justify-center rounded-2xl bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground shadow-sm transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background active:translate-y-0 sm:hidden"
+            >
+              Fazer pedido
+            </Link>
+            <Link
+              href="/precos"
+              className="inline-flex items-center justify-center rounded-2xl border border-border bg-card px-4 py-2 text-xs font-semibold text-foreground shadow-sm transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:hidden"
             >
               Tabela de preços
             </Link>
 
             <nav className="hidden items-center gap-6 sm:flex">
+              <a
+                href="/pedido"
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                Pedido
+              </a>
               <a
                 href="/precos"
                 className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
@@ -314,7 +326,7 @@ export default function Home() {
           <div>
             <p className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-xs font-semibold text-muted-foreground">
               <span className="h-2 w-2 rounded-full bg-accent" />
-              Valores em reais (R$)
+              Quem precisa de papel quando se tem um cardápio digital?
             </p>
             <h1 className="mt-5 text-3xl font-semibold tracking-tight sm:text-4xl">
               Seu cardápio, bonito e rápido
@@ -325,6 +337,7 @@ export default function Home() {
             </p>
 
             <div className="mt-7 flex flex-wrap gap-3">
+              <PrimaryButton href="/pedido" label="Fazer pedido" />
               <PrimaryButton href="#destaques" label="Ver top produtos" />
               <SecondaryButton href="/precos" label="Tabela de preços" />
             </div>

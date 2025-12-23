@@ -5,6 +5,7 @@ export type MenuItem = {
   price: string;
   imageSrc: string;
   category: ProductCategory;
+  options?: string[];
 };
 
 export function slugify(value: string): string {
@@ -21,10 +22,11 @@ export function slugify(value: string): string {
 
 export const bebidas: MenuItem[] = [
   {
-    name: "Água sem / com gás",
+    name: "Água",
     price: "R$ 6,00",
     imageSrc: "/Itens/agua.webp",
     category: "bebidas",
+    options: ["Sem gás", "Com gás"],
   },
   {
     name: "Balde de gelo",
@@ -37,42 +39,56 @@ export const bebidas: MenuItem[] = [
     price: "R$ 9,00",
     imageSrc: "/Itens/cerveja-lata.png",
     category: "bebidas",
+    options: ["Heineken Zero", "Original", "Amstel", "Brahma"],
   },
   {
     name: "Cerveja long neck",
     price: "R$ 13,00",
     imageSrc: "/Itens/cerveja-long-neck.png",
     category: "bebidas",
+    options: ["Heineken", "Original", "Malzbier"],
   },
   {
     name: "Caipirinha de pinga",
     price: "R$ 25,00",
     imageSrc: "/Itens/caipirinha-de-pinga.png",
     category: "bebidas",
+    options: ["Morango", "Limão"],
   },
   {
     name: "Caipirinha de vodka",
     price: "R$ 30,00",
     imageSrc: "/Itens/caipirinha-vodka.webp",
     category: "bebidas",
+    options: ["Morango", "Limão"],
   },
   {
     name: "Gatorade",
     price: "R$ 9,00",
     imageSrc: "/Itens/gatorade.png",
     category: "bebidas",
+    options: ["Azul", "Vermelho"],
   },
   {
     name: "H2O",
     price: "R$ 9,00",
     imageSrc: "/Itens/h2o.jpg",
     category: "bebidas",
+    options: ["Limoneto", "Normal"],
   },
   {
     name: "Refrigerante",
     price: "R$ 8,00",
     imageSrc: "/Itens/refrigerante.png",
     category: "bebidas",
+    options: [
+      "Coca-Cola",
+      "Guaraná",
+      "Coca-Cola Zero",
+      "Guaraná Zero",
+      "Fanta",
+      "Sukita",
+    ],
   },
 ];
 
@@ -130,6 +146,7 @@ export const porcoes: MenuItem[] = [
     price: "R$ 36,00",
     imageSrc: "/Itens/nuggets-smile.png",
     category: "porcoes",
+    options: ["Nuggets", "Smiles"],
   },
   {
     name: "Pastelzinho",

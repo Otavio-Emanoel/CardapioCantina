@@ -25,7 +25,7 @@ export default async function ProdutoPage({
             href="/"
             className="text-sm font-semibold text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
-            Voltar
+            Voltar ao cardápio
           </Link>
 
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-semibold text-muted-foreground">
@@ -85,6 +85,24 @@ export default async function ProdutoPage({
                       {badgeLabel}
                     </span>
                   </div>
+
+                  {item.options?.length ? (
+                    <div className="grid gap-2">
+                      <span className="text-sm font-semibold text-muted-foreground">
+                        Opções
+                      </span>
+                      <div className="flex flex-wrap gap-2">
+                        {item.options.map((opt) => (
+                          <span
+                            key={opt}
+                            className="inline-flex items-center rounded-full border border-border bg-card px-3 py-1 text-xs font-semibold text-foreground"
+                          >
+                            {opt}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
 
                 <div className="mt-5">
