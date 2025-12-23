@@ -47,7 +47,7 @@ export const bebidas: MenuItem[] = [
   {
     name: "Caipirinha de pinga",
     price: "R$ 25,00",
-    imageSrc: "/Itens/caipirinha-pinga.jpeg",
+    imageSrc: "/Itens/caipirinha-de-pinga.png",
     category: "bebidas",
   },
   {
@@ -80,55 +80,55 @@ export const porcoes: MenuItem[] = [
   {
     name: "Almôndega",
     price: "R$ 46,00",
-    imageSrc: "/Itens/almondegas.png",
+    imageSrc: "/Itens/almondega.webp",
     category: "porcoes",
   },
   {
     name: "Bolinho de queijo",
     price: "R$ 36,00",
-    imageSrc: "/Itens/bolinho-de-queijo.jpg",
+    imageSrc: "/Itens/bolinho-de-queijo.png",
     category: "porcoes",
   },
   {
     name: "Bolinho bacalhau",
     price: "R$ 61,00",
-    imageSrc: "/Itens/bolinho-de-bacalhau.jpeg",
+    imageSrc: "/Itens/bolinho-de-bacalhau.png",
     category: "porcoes",
   },
   {
     name: "Calabresa",
     price: "R$ 46,00",
-    imageSrc: "/Itens/calabresa.jpeg",
+    imageSrc: "/Itens/calabresa.png",
     category: "porcoes",
   },
   {
     name: "Camarão",
     price: "R$ 61,00",
-    imageSrc: "/Itens/camar%C3%A3o.jpeg",
+    imageSrc: "/Itens/camarao.png",
     category: "porcoes",
   },
   {
     name: "Coxinha",
     price: "R$ 36,00",
-    imageSrc: "/Itens/coxinha.webp",
+    imageSrc: "/Itens/coxinha.png",
     category: "porcoes",
   },
   {
     name: "Fritas",
     price: "R$ 36,00",
-    imageSrc: "/Itens/fritas.jpeg",
+    imageSrc: "/Itens/fritas.png",
     category: "porcoes",
   },
   {
     name: "Mandioca",
     price: "R$ 36,00",
-    imageSrc: "/Itens/mandioca.jpeg",
+    imageSrc: "/Itens/mandioca1.png",
     category: "porcoes",
   },
   {
     name: "Nuggets / Smiles",
     price: "R$ 36,00",
-    imageSrc: "/Itens/nuggets-smiles.jpg",
+    imageSrc: "/Itens/nuggets-smile.png",
     category: "porcoes",
   },
   {
@@ -140,7 +140,7 @@ export const porcoes: MenuItem[] = [
   {
     name: "Polenta",
     price: "R$ 36,00",
-    imageSrc: "/Itens/polenta.jpeg",
+    imageSrc: "/Itens/polenta.png",
     category: "porcoes",
   },
   {
@@ -152,7 +152,7 @@ export const porcoes: MenuItem[] = [
   {
     name: "Isca de peixe",
     price: "R$ 61,00",
-    imageSrc: "/Itens/isca-de-peixe.webp",
+    imageSrc: "/Itens/isca-de-peixe.png",
     category: "porcoes",
   },
 ];

@@ -421,7 +421,7 @@ export default function Home() {
       </section>
 
       <footer className="pb-10 text-center text-sm text-muted-foreground">
-        Cantina Bougainville 1 • Cardápio
+        Cantina Bougainville 1 • Cardápio da Praia • Desenvolvido por Otavio Emanoel
       </footer>
     </div>
   );
