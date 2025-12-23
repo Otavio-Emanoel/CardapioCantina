@@ -333,7 +333,7 @@ export default function Home() {
             </h1>
             <p className="mt-4 max-w-prose text-sm text-muted-foreground sm:text-base">
               Bebidas e porções da Cantina Bougainville 1 em um layout mais
-              moderno, organizado e fácil de consultar.
+              moderno, organizado e fácil de consultar. Na palma de sua mão!
             </p>
 
             <div className="mt-7 flex flex-wrap gap-3">

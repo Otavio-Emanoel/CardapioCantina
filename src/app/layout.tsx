@@ -13,9 +13,41 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Cantina Bougainville 1 | Cardápio",
-  description:
-    "Cardápio da Cantina Bougainville 1 com bebidas e porções.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  title: {
+    default: "Cantina Bougainville 1",
+    template: "%s | Cantina Bougainville 1",
+  },
+  description: "Cardápio da Cantina Bougainville 1 com bebidas e porções (apenas na praia).",
+  applicationName: "Cantina Bougainville 1",
+  keywords: [
+    "cantina",
+    "cardápio",
+    "praia",
+    "bebidas",
+    "porções",
+    "pedido",
+    "whatsapp",
+    "Cantina Bougainville 1",
+  ],
+  creator: "Otávio Emanoel de Lima",
+  authors: [{ name: "Otávio Emanoel de Lima" }],
+  robots: {
+    index: true,
+    follow: true,
+  },
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    title: "Cantina Bougainville 1",
+    description: "Cardápio da Cantina Bougainville 1 com bebidas e porções (apenas na praia).",
+    siteName: "Cantina Bougainville 1",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Cantina Bougainville 1",
+    description: "Cardápio da Cantina Bougainville 1 com bebidas e porções (apenas na praia).",
+  },
 };
 
 export default function RootLayout({
