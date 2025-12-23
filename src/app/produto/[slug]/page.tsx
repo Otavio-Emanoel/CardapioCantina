@@ -59,6 +59,14 @@ export default async function ProdutoPage({
                   Informações do produto no cardápio da Cantina Bougainville 1.
                 </p>
 
+                <div className="mt-4 rounded-3xl border border-border bg-muted/30 p-4">
+                  <p className="text-sm text-muted-foreground">
+                    Cardápio válido <span className="font-semibold">apenas na praia</span>. Imagens
+                    <span className="font-semibold"> ilustrativas</span>. Preços e disponibilidade
+                    podem mudar sem aviso.
+                  </p>
+                </div>
+
                 <div className="mt-5 grid gap-3 rounded-3xl border border-border bg-background/60 p-4">
                   <div className="flex items-baseline justify-between gap-4">
                     <span className="text-sm font-semibold text-muted-foreground">

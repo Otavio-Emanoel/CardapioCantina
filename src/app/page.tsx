@@ -104,6 +104,27 @@ function SecondaryButton({ href, label }: { href: string; label: string }) {
   );
 }
 
+function NoticeBox() {
+  return (
+    <section className="rounded-[2rem] border border-border bg-card p-5 sm:p-6">
+      <h2 className="text-sm font-semibold text-foreground">Avisos</h2>
+      <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+        <li>
+          Este cardápio é válido <span className="font-semibold">apenas na praia</span>.
+        </li>
+        <li>
+          As imagens são <span className="font-semibold">ilustrativas</span> e podem não
+          representar o produto final.
+        </li>
+        <li>
+          Preços e disponibilidade podem <span className="font-semibold">mudar sem aviso</span>.
+        </li>
+        <li>Em caso de dúvida, confirme diretamente com a cantina.</li>
+      </ul>
+    </section>
+  );
+}
+
 function SectionTitle({
   eyebrow,
   title,
@@ -250,7 +271,7 @@ export default function Home() {
             <div className="relative h-10 w-10 overflow-hidden rounded-full border border-border bg-card">
               <Image
                 src="/icon.png"
-                alt="Logo da Cantina Bouga 1"
+                alt="Logo da Cantina Bougainville 1"
                 fill
                 sizes="40px"
                 className="object-cover"
@@ -291,6 +312,10 @@ export default function Home() {
             <div className="mt-7 flex flex-wrap gap-3">
               <PrimaryButton href="#destaques" label="Ver top produtos" />
               <SecondaryButton href="#itens" label="Ver todos os itens" />
+            </div>
+
+            <div className="mt-8">
+              <NoticeBox />
             </div>
           </div>
 
