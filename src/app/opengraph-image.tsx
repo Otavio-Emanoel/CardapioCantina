@@ -15,8 +15,8 @@ export default function OpenGraphImage() {
           width: "100%",
           height: "100%",
           display: "flex",
-          background: "#fff7fa",
-          color: "#200d15",
+          background: "#fff7ed",
+          color: "#2b1605",
           padding: 64,
           justifyContent: "space-between",
           flexDirection: "column",
@@ -35,7 +35,7 @@ export default function OpenGraphImage() {
                 width: 72,
                 height: 72,
                 borderRadius: 24,
-                border: "3px solid #f5c7d6",
+                border: "3px solid #fed7aa",
                 background: "#ffffff",
                 display: "flex",
                 alignItems: "center",
@@ -47,11 +47,11 @@ export default function OpenGraphImage() {
                   width: 54,
                   height: 54,
                   borderRadius: 999,
-                  background: "#ea4c89",
+                  background: "#f97316",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  color: "#fff7fa",
+                  color: "#fff7ed",
                   fontSize: 22,
                   fontWeight: 900,
                 }}
@@ -60,7 +60,7 @@ export default function OpenGraphImage() {
               </div>
             </div>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <div style={{ fontSize: 18, fontWeight: 700, color: "#ea4c89" }}>
+              <div style={{ fontSize: 18, fontWeight: 700, color: "#f97316" }}>
                 Cardápio
               </div>
               <div style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-0.8px" }}>
@@ -73,14 +73,14 @@ export default function OpenGraphImage() {
             style={{
               padding: "12px 16px",
               borderRadius: 999,
-              border: "2px solid #f5c7d6",
+              border: "2px solid #fed7aa",
               background: "#ffffff",
               fontSize: 16,
               fontWeight: 700,
-              color: "#6b3a4d",
+              color: "#7c3f12",
             }}
           >
-            Apenas na praia
+            Praia e Cantina/Casa
           </div>
         </div>
 
@@ -103,7 +103,7 @@ export default function OpenGraphImage() {
             style={{
               marginTop: 18,
               fontSize: 24,
-              color: "#6b3a4d",
+              color: "#7c3f12",
               maxWidth: 900,
               lineHeight: 1.3,
             }}
@@ -117,9 +117,9 @@ export default function OpenGraphImage() {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            borderTop: "2px solid #f5c7d6",
+            borderTop: "2px solid #fed7aa",
             paddingTop: 18,
-            color: "#6b3a4d",
+            color: "#7c3f12",
             fontSize: 16,
             fontWeight: 700,
           }}

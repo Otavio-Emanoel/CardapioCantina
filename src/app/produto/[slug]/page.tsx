@@ -1,8 +1,33 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 
-import { getItemBySlug } from "@/lib/menu";
+import { isOrderLocation, ORDER_LOCATION_COOKIE, type OrderLocation } from "@/lib/location";
+import { getItemBySlugForLocation } from "@/lib/menu";
+
+function getCategoryLabel(category: string): string {
+  switch (category) {
+    case "almoco":
+      return "Almoço";
+    case "lanches":
+      return "Lanche";
+    case "porcoes":
+      return "Porção";
+    case "porcoes_extras":
+      return "Extra";
+    case "cafe_da_manha":
+      return "Café da manhã";
+    case "omeletes":
+      return "Omelete";
+    case "sobremesas":
+      return "Sobremesa";
+    case "bebidas":
+      return "Bebida";
+    default:
+      return "Item";
+  }
+}
 
 export default async function ProdutoPage({
   params,
@@ -10,11 +35,16 @@ export default async function ProdutoPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const item = getItemBySlug(slug);
+
+  const cookieStore = await cookies();
+  const cookieValue = cookieStore.get(ORDER_LOCATION_COOKIE)?.value;
+  const location: OrderLocation = isOrderLocation(cookieValue) ? cookieValue : "praia";
+
+  const item = getItemBySlugForLocation(location, slug);
 
   if (!item) notFound();
 
-  const badgeLabel = item.category === "bebidas" ? "Bebida" : "Porção";
+  const badgeLabel = getCategoryLabel(item.category);
   const badgeDotClass = item.category === "bebidas" ? "bg-primary" : "bg-accent";
 
   return (
@@ -22,7 +52,7 @@ export default async function ProdutoPage({
       <div className="mx-auto w-full max-w-3xl px-4 pb-12 pt-10 sm:px-6 lg:px-8">
         <header className="flex items-center justify-between gap-4">
           <Link
-            href="/"
+            href="/cardapio"
             className="text-sm font-semibold text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             Voltar ao cardápio
@@ -61,10 +91,14 @@ export default async function ProdutoPage({
 
                 <div className="mt-4 rounded-3xl border border-border bg-muted/30 p-4">
                   <p className="text-sm text-muted-foreground">
-                    Cardápio válido <span className="font-semibold">apenas na praia</span>. Imagens
-                    <span className="font-semibold"> ilustrativas</span>. Preços e disponibilidade
-                    podem mudar sem aviso.
+                    Imagens <span className="font-semibold">ilustrativas</span>. Preços e disponibilidade podem
+                    mudar sem aviso.
                   </p>
+                  {item.description ? (
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      <span className="font-semibold">Obs.:</span> {item.description}
+                    </p>
+                  ) : null}
                 </div>
 
                 <div className="mt-5 grid gap-3 rounded-3xl border border-border bg-background/60 p-4">
@@ -107,7 +141,7 @@ export default async function ProdutoPage({
 
                 <div className="mt-5">
                   <Link
-                    href="/"
+                    href="/cardapio"
                     className="inline-flex items-center justify-center rounded-2xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-sm transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-card active:translate-y-0"
                   >
                     Ver mais itens

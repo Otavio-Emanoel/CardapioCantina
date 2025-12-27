@@ -18,12 +18,13 @@ export const metadata: Metadata = {
     default: "Cantina Bougainville 1",
     template: "%s | Cantina Bougainville 1",
   },
-  description: "Cardápio da Cantina Bougainville 1 com bebidas e porções (apenas na praia).",
+  description: "Cardápio da Cantina Bougainville 1 (praia e cantina/casa) com itens e preços.",
   applicationName: "Cantina Bougainville 1",
   keywords: [
     "cantina",
     "cardápio",
     "praia",
+    "casa",
     "bebidas",
     "porções",
     "pedido",
@@ -40,13 +41,13 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pt_BR",
     title: "Cantina Bougainville 1",
-    description: "Cardápio da Cantina Bougainville 1 com bebidas e porções (apenas na praia).",
+    description: "Cardápio da Cantina Bougainville 1 (praia e cantina/casa) com itens e preços.",
     siteName: "Cantina Bougainville 1",
   },
   twitter: {
     card: "summary_large_image",
     title: "Cantina Bougainville 1",
-    description: "Cardápio da Cantina Bougainville 1 com bebidas e porções (apenas na praia).",
+    description: "Cardápio da Cantina Bougainville 1 (praia e cantina/casa) com itens e preços.",
   },
 };
 

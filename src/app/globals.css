@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  /* Rosa pastel (claro) */
-  --background: #fff7fa;
-  --foreground: #200d15;
+  /* Laranja claro (claro) */
+  --background: #fff7ed;
+  --foreground: #2b1605;
   --card: #ffffff;
-  --muted: #ffe8f0;
-  --muted-foreground: #6b3a4d;
-  --primary: #ea4c89;
-  --primary-foreground: #fff7fa;
-  --accent: #ffb1c7;
-  --accent-foreground: #2b0b14;
-  --border: #f5c7d6;
+  --muted: #ffedd5;
+  --muted-foreground: #7c3f12;
+  --primary: #f97316;
+  --primary-foreground: #fff7ed;
+  --accent: #fdba74;
+  --accent-foreground: #2b1605;
+  --border: #fed7aa;
 }
 
 @theme inline {
@@ -31,17 +31,17 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Rosa pastel (escuro) */
-    --background: #12060d;
-    --foreground: #fff2f7;
-    --card: #190a12;
-    --muted: #2a0f1d;
-    --muted-foreground: #f2b9cf;
-    --primary: #ff6ea7;
-    --primary-foreground: #190a12;
-    --accent: #ffb6cd;
-    --accent-foreground: #190a12;
-    --border: #3b1425;
+    /* Laranja claro (escuro) */
+    --background: #140a03;
+    --foreground: #fff7ed;
+    --card: #1b0d04;
+    --muted: #2a1406;
+    --muted-foreground: #fdba74;
+    --primary: #fb923c;
+    --primary-foreground: #1b0d04;
+    --accent: #fdba74;
+    --accent-foreground: #1b0d04;
+    --border: #3a1a07;
   }
 }
 

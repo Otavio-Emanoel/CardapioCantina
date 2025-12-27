@@ -1,11 +1,42 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
-import { allItems, slugify, type MenuItem, type ProductCategory } from "@/lib/menu";
+import {
+  getOrderLocationFromBrowser,
+  getOrderLocationLabel,
+  type OrderLocation,
+} from "@/lib/location";
+import { getMenu, slugify, type MenuItem, type ProductCategory } from "@/lib/menu";
 
 type CategoryFilter = ProductCategory | "all";
+
+function getCategoryLabel(category: CategoryFilter): string {
+  switch (category) {
+    case "all":
+      return "Todos";
+    case "almoco":
+      return "Almoço";
+    case "lanches":
+      return "Lanches";
+    case "porcoes":
+      return "Porções";
+    case "porcoes_extras":
+      return "Extras";
+    case "cafe_da_manha":
+      return "Café da manhã";
+    case "omeletes":
+      return "Omeletes";
+    case "sobremesas":
+      return "Sobremesas";
+    case "bebidas":
+      return "Bebidas";
+    default:
+      return "Categoria";
+  }
+}
 
 type OrderLine = {
   item: MenuItem;
@@ -92,10 +123,16 @@ function QtyControl({
   );
 }
 
-function buildWhatsAppText(name: string, lines: OrderLine[], total: number): string {
+function buildWhatsAppText(
+  location: OrderLocation,
+  name: string,
+  lines: OrderLine[],
+  total: number,
+): string {
   const safeName = name.trim();
 
-  const header = `Olá, estou fazendo um pedido na praia, sou ${safeName} e vou querer:`;
+  const where = location === "praia" ? "na praia" : "na cantina/casa";
+  const header = `Olá, estou fazendo um pedido ${where}, sou ${safeName} e vou querer:`;
 
   const body = lines
     .map((line) => {
@@ -123,27 +160,48 @@ function buildWhatsAppUrl(phoneRaw: string, text: string): string {
 }
 
 export default function PedidoPage() {
+  const router = useRouter();
   const cantinaPhone = process.env.NEXT_PUBLIC_WHATSAPP_PHONE ?? "";
+
+  const [location, setLocation] = useState<OrderLocation | null>(null);
 
   const [name, setName] = useState("");
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<CategoryFilter>("all");
   const [qtyByKey, setQtyByKey] = useState<Record<string, number>>({});
 
+  const menu = useMemo(() => {
+    if (!location) return null;
+    return getMenu(location);
+  }, [location]);
+
+  useEffect(() => {
+    const selected = getOrderLocationFromBrowser();
+    if (!selected) {
+      router.replace("/");
+      return;
+    }
+    setLocation(selected);
+  }, [router]);
+
   const normalizedQuery = query.trim().toLowerCase();
 
   const filteredItems = useMemo(() => {
-    return allItems.filter((item) => {
+    if (!menu) return [];
+
+    return menu.allItems.filter((item) => {
       if (category !== "all" && item.category !== category) return false;
       if (!normalizedQuery) return true;
       return item.name.toLowerCase().includes(normalizedQuery);
     });
-  }, [category, normalizedQuery]);
+  }, [category, menu, normalizedQuery]);
 
   const lines = useMemo<OrderLine[]>(() => {
     const result: OrderLine[] = [];
 
-    for (const item of allItems) {
+    if (!menu) return result;
+
+    for (const item of menu.allItems) {
       const slug = slugify(item.name);
       const unit = parseBRL(item.price);
 
@@ -168,7 +226,7 @@ export default function PedidoPage() {
     });
 
     return result;
-  }, [qtyByKey]);
+  }, [menu, qtyByKey]);
 
   const totalQty = useMemo(() => {
     return lines.reduce((acc, line) => acc + line.qty, 0);
@@ -179,17 +237,24 @@ export default function PedidoPage() {
   }, [lines]);
 
   const whatsText = useMemo(() => {
-    return buildWhatsAppText(name, lines, total);
-  }, [name, lines, total]);
+    if (!location) return "";
+    return buildWhatsAppText(location, name, lines, total);
+  }, [location, name, lines, total]);
 
   const canSend = name.trim().length > 0 && lines.length > 0;
+
+  if (!menu || !location) return null;
+
+  const locationLabel = getOrderLocationLabel(location);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="mx-auto w-full max-w-6xl px-4 pb-14 pt-10 sm:px-6 lg:px-8">
         <header className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-xs font-semibold text-primary">Cantina Bougainville 1</p>
+            <p className="text-xs font-semibold text-primary">
+              Cantina Bougainville 1 • {locationLabel}
+            </p>
             <h1 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
               Fazer pedido
             </h1>
@@ -205,7 +270,7 @@ export default function PedidoPage() {
               Ver preços
             </Link>
             <Link
-              href="/"
+              href="/cardapio"
               className="inline-flex items-center justify-center rounded-2xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 active:translate-y-0"
             >
               Voltar
@@ -246,9 +311,9 @@ export default function PedidoPage() {
 
             <div className="mt-6 rounded-3xl border border-border bg-muted/30 p-4">
               <p className="text-sm text-muted-foreground">
-                Cardápio válido <span className="font-semibold">apenas na praia</span>. Imagens
-                <span className="font-semibold"> ilustrativas</span>. Preços e disponibilidade
-                podem mudar sem aviso.
+                Cardápio selecionado: <span className="font-semibold">{locationLabel}</span>. Imagens
+                <span className="font-semibold"> ilustrativas</span>. Preços e disponibilidade podem
+                mudar sem aviso.
               </p>
             </div>
 
@@ -273,6 +338,16 @@ export default function PedidoPage() {
                     onClick={() => setCategory("all")}
                   />
                   <FilterChip
+                    active={category === "almoco"}
+                    label="Almoço"
+                    onClick={() => setCategory("almoco")}
+                  />
+                  <FilterChip
+                    active={category === "lanches"}
+                    label="Lanches"
+                    onClick={() => setCategory("lanches")}
+                  />
+                  <FilterChip
                     active={category === "bebidas"}
                     label="Bebidas"
                     onClick={() => setCategory("bebidas")}
@@ -282,13 +357,33 @@ export default function PedidoPage() {
                     label="Porções"
                     onClick={() => setCategory("porcoes")}
                   />
+                  <FilterChip
+                    active={category === "porcoes_extras"}
+                    label="Extras"
+                    onClick={() => setCategory("porcoes_extras")}
+                  />
+                  <FilterChip
+                    active={category === "cafe_da_manha"}
+                    label="Café"
+                    onClick={() => setCategory("cafe_da_manha")}
+                  />
+                  <FilterChip
+                    active={category === "omeletes"}
+                    label="Omeletes"
+                    onClick={() => setCategory("omeletes")}
+                  />
+                  <FilterChip
+                    active={category === "sobremesas"}
+                    label="Sobremesas"
+                    onClick={() => setCategory("sobremesas")}
+                  />
                 </div>
               </div>
 
               <ul className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {filteredItems.map((item) => {
                   const slug = slugify(item.name);
-                  const badgeLabel = item.category === "bebidas" ? "Bebida" : "Porção";
+                  const badgeLabel = getCategoryLabel(item.category);
                   const badgeClass =
                     item.category === "bebidas"
                       ? "bg-primary text-primary-foreground"
@@ -303,6 +398,11 @@ export default function PedidoPage() {
                         <div>
                           <p className="text-sm font-semibold text-foreground">{item.name}</p>
                           <p className="mt-1 text-sm font-semibold text-foreground">{item.price}</p>
+                          {item.description ? (
+                            <p className="mt-1 text-xs text-muted-foreground">
+                              {item.description}
+                            </p>
+                          ) : null}
                         </div>
                         <span
                           className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${badgeClass}`}

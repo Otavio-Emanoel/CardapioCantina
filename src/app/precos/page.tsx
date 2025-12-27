@@ -1,6 +1,13 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 
-import { bebidas, porcoes } from "@/lib/menu";
+import {
+  getOrderLocationLabel,
+  isOrderLocation,
+  ORDER_LOCATION_COOKIE,
+  type OrderLocation,
+} from "@/lib/location";
+import { getMenu } from "@/lib/menu";
 
 function PriceRow({ name, price }: { name: string; price: string }) {
   return (
@@ -15,17 +22,27 @@ function PriceRow({ name, price }: { name: string; price: string }) {
   );
 }
 
-export default function PrecosPage() {
+export default async function PrecosPage() {
+  const cookieStore = await cookies();
+  const cookieValue = cookieStore.get(ORDER_LOCATION_COOKIE)?.value;
+  const location: OrderLocation = isOrderLocation(cookieValue) ? cookieValue : "praia";
+  const menu = getMenu(location);
+  const locationLabel = getOrderLocationLabel(location);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="mx-auto w-full max-w-3xl px-4 pb-14 pt-10 sm:px-6 lg:px-8">
         <header className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-xs font-semibold text-primary">Cantina Bougainville 1</p>
-            <h1 className="mt-1 text-2xl font-semibold tracking-tight">Preços (lista simples)</h1>
+            <p className="text-xs font-semibold text-primary">
+              Cantina Bougainville 1 • {locationLabel}
+            </p>
+            <h1 className="mt-1 text-2xl font-semibold tracking-tight">
+              Preços (lista simples)
+            </h1>
           </div>
           <Link
-            href="/"
+            href="/cardapio"
             className="text-sm font-semibold text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             Voltar
@@ -36,7 +53,7 @@ export default function PrecosPage() {
           <h2 className="text-sm font-semibold text-foreground">Avisos</h2>
           <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
             <li>
-              Este cardápio é válido <span className="font-semibold">apenas na praia</span>.
+              Cardápio selecionado: <span className="font-semibold">{locationLabel}</span>.
             </li>
             <li>
               Preços e disponibilidade podem <span className="font-semibold">mudar sem aviso</span>.
@@ -45,26 +62,94 @@ export default function PrecosPage() {
           </ul>
         </section>
 
+        {menu.almoco.length ? (
+          <section className="mt-10">
+            <h2 className="text-lg font-semibold tracking-tight">Almoço</h2>
+            <ul className="mt-4 space-y-3">
+              {menu.almoco.map((item) => (
+                <PriceRow key={item.name} name={item.name} price={item.price} />
+              ))}
+            </ul>
+          </section>
+        ) : null}
+
+        {menu.lanches.length ? (
+          <section className="mt-10">
+            <h2 className="text-lg font-semibold tracking-tight">Lanches</h2>
+            <ul className="mt-4 space-y-3">
+              {menu.lanches.map((item) => (
+                <PriceRow key={item.name} name={item.name} price={item.price} />
+              ))}
+            </ul>
+          </section>
+        ) : null}
+
         <section className="mt-10">
           <h2 className="text-lg font-semibold tracking-tight">Bebidas</h2>
           <ul className="mt-4 space-y-3">
-            {bebidas.map((item) => (
+            {menu.bebidas.map((item) => (
               <PriceRow key={item.name} name={item.name} price={item.price} />
             ))}
           </ul>
         </section>
 
-        <section className="mt-10">
-          <h2 className="text-lg font-semibold tracking-tight">Porções</h2>
-          <ul className="mt-4 space-y-3">
-            {porcoes.map((item) => (
-              <PriceRow key={item.name} name={item.name} price={item.price} />
-            ))}
-          </ul>
-        </section>
+        {menu.porcoes.length ? (
+          <section className="mt-10">
+            <h2 className="text-lg font-semibold tracking-tight">Porções</h2>
+            <ul className="mt-4 space-y-3">
+              {menu.porcoes.map((item) => (
+                <PriceRow key={item.name} name={item.name} price={item.price} />
+              ))}
+            </ul>
+          </section>
+        ) : null}
+
+        {menu.porcoes_extras.length ? (
+          <section className="mt-10">
+            <h2 className="text-lg font-semibold tracking-tight">Extras</h2>
+            <ul className="mt-4 space-y-3">
+              {menu.porcoes_extras.map((item) => (
+                <PriceRow key={item.name} name={item.name} price={item.price} />
+              ))}
+            </ul>
+          </section>
+        ) : null}
+
+        {menu.cafe_da_manha.length ? (
+          <section className="mt-10">
+            <h2 className="text-lg font-semibold tracking-tight">Café da manhã</h2>
+            <ul className="mt-4 space-y-3">
+              {menu.cafe_da_manha.map((item) => (
+                <PriceRow key={item.name} name={item.name} price={item.price} />
+              ))}
+            </ul>
+          </section>
+        ) : null}
+
+        {menu.omeletes.length ? (
+          <section className="mt-10">
+            <h2 className="text-lg font-semibold tracking-tight">Omeletes</h2>
+            <ul className="mt-4 space-y-3">
+              {menu.omeletes.map((item) => (
+                <PriceRow key={item.name} name={item.name} price={item.price} />
+              ))}
+            </ul>
+          </section>
+        ) : null}
+
+        {menu.sobremesas.length ? (
+          <section className="mt-10">
+            <h2 className="text-lg font-semibold tracking-tight">Sobremesas</h2>
+            <ul className="mt-4 space-y-3">
+              {menu.sobremesas.map((item) => (
+                <PriceRow key={item.name} name={item.name} price={item.price} />
+              ))}
+            </ul>
+          </section>
+        ) : null}
 
         <footer className="mt-10 text-center text-sm text-muted-foreground">
-          Cantina Bougainville 1 • Preços
+          Cantina Bougainville 1 • Preços • {locationLabel}
         </footer>
       </div>
     </div>
