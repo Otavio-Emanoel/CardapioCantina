@@ -175,6 +175,37 @@ export default function PedidoPage() {
     return getMenu(location);
   }, [location]);
 
+  const visibleCategories = useMemo<CategoryFilter[]>(() => {
+    if (!menu || !location) return ["all"];
+
+    if (location === "praia") return ["all", "bebidas", "porcoes"];
+
+    const categories: ProductCategory[] = [
+      "almoco",
+      "lanches",
+      "bebidas",
+      "porcoes",
+      "porcoes_extras",
+      "cafe_da_manha",
+      "omeletes",
+      "sobremesas",
+    ];
+
+    const result: CategoryFilter[] = ["all"];
+    for (const cat of categories) {
+      const items = menu[cat];
+      if (items?.length) result.push(cat);
+    }
+
+    return result;
+  }, [location, menu]);
+
+  useEffect(() => {
+    if (!visibleCategories.includes(category)) {
+      setCategory("all");
+    }
+  }, [category, visibleCategories]);
+
   useEffect(() => {
     const selected = getOrderLocationFromBrowser();
     if (!selected) {
@@ -332,51 +363,14 @@ export default function PedidoPage() {
                 </label>
 
                 <div className="flex flex-wrap gap-2">
-                  <FilterChip
-                    active={category === "all"}
-                    label="Todos"
-                    onClick={() => setCategory("all")}
-                  />
-                  <FilterChip
-                    active={category === "almoco"}
-                    label="Almoço"
-                    onClick={() => setCategory("almoco")}
-                  />
-                  <FilterChip
-                    active={category === "lanches"}
-                    label="Lanches"
-                    onClick={() => setCategory("lanches")}
-                  />
-                  <FilterChip
-                    active={category === "bebidas"}
-                    label="Bebidas"
-                    onClick={() => setCategory("bebidas")}
-                  />
-                  <FilterChip
-                    active={category === "porcoes"}
-                    label="Porções"
-                    onClick={() => setCategory("porcoes")}
-                  />
-                  <FilterChip
-                    active={category === "porcoes_extras"}
-                    label="Extras"
-                    onClick={() => setCategory("porcoes_extras")}
-                  />
-                  <FilterChip
-                    active={category === "cafe_da_manha"}
-                    label="Café"
-                    onClick={() => setCategory("cafe_da_manha")}
-                  />
-                  <FilterChip
-                    active={category === "omeletes"}
-                    label="Omeletes"
-                    onClick={() => setCategory("omeletes")}
-                  />
-                  <FilterChip
-                    active={category === "sobremesas"}
-                    label="Sobremesas"
-                    onClick={() => setCategory("sobremesas")}
-                  />
+                  {visibleCategories.map((cat) => (
+                    <FilterChip
+                      key={cat}
+                      active={category === cat}
+                      label={getCategoryLabel(cat)}
+                      onClick={() => setCategory(cat)}
+                    />
+                  ))}
                 </div>
               </div>
 
