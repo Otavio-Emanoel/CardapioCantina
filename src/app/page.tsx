@@ -92,6 +92,7 @@ export default function Home() {
 
         <footer className="mt-10 text-center text-sm text-muted-foreground">
           Cantina Bougainville 1 • Seletor de cardápio
+          <p>Desenvolvido por Otavio Emanoel</p>
         </footer>
       </div>
     </div>

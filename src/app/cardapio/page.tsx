@@ -460,6 +460,7 @@ export default function CardapioPage() {
 
         <footer className="mt-12 text-center text-sm text-muted-foreground">
           Cantina Bougainville 1 • Cardápio • {locationLabel}
+          <p>Desenvolvido por Otavio Emanoel</p>
         </footer>
       </div>
     </div>
