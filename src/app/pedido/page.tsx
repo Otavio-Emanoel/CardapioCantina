@@ -415,7 +415,7 @@ export default function PedidoPage() {
                   <textarea
                     value={praiaReference}
                     onChange={(e) => setPraiaReference(e.target.value)}
-                    placeholder="Ex.: em frente ao quiosque X, perto do poste Y, guarda-sol azul..."
+                    placeholder="Ex.: em frente a tenda, perto da rampa, x pessoas no guarda sol..."
                     rows={3}
                     className="w-full resize-y rounded-2xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary/40"
                   />
