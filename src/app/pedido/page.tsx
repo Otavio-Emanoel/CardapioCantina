@@ -126,6 +126,14 @@ function QtyControl({
 function buildWhatsAppText(
   location: OrderLocation,
   name: string,
+  extra:
+    | {
+        praiaReference?: string;
+        cantinaFulfillment?: "retirar" | "entregar";
+        deliveryStreet?: string;
+        deliveryNumber?: string;
+      }
+    | undefined,
   lines: OrderLine[],
   total: number,
 ): string {
@@ -133,6 +141,29 @@ function buildWhatsAppText(
 
   const where = location === "praia" ? "na praia" : "na cantina/casa";
   const header = `Olá, estou fazendo um pedido ${where}, sou ${safeName} e vou querer:`;
+
+  const details: string[] = [];
+  if (location === "praia") {
+    const reference = extra?.praiaReference?.trim();
+    if (reference) details.push(`Ponto de referência (praia): ${reference}`);
+  }
+
+  if (location === "cantina") {
+    const fulfillment = extra?.cantinaFulfillment ?? "retirar";
+    if (fulfillment === "retirar") {
+      details.push("Retirada: vou retirar na cantina.");
+    } else {
+      const street = extra?.deliveryStreet?.trim();
+      const number = extra?.deliveryNumber?.trim();
+      details.push("Entrega: somente dentro do condomínio.");
+      if (street || number) {
+        const address = [street ? `Rua ${street}` : "", number ? `Nº ${number}` : ""]
+          .filter(Boolean)
+          .join(", ");
+        if (address) details.push(`Endereço: ${address}`);
+      }
+    }
+  }
 
   const body = lines
     .map((line) => {
@@ -149,7 +180,7 @@ function buildWhatsAppText(
 
   const footer = `Total: ${formatBRL(total)}`;
 
-  return [header, body, footer].filter(Boolean).join("\n");
+  return [header, ...details, body, footer].filter(Boolean).join("\n");
 }
 
 function buildWhatsAppUrl(phoneRaw: string, text: string): string {
@@ -164,6 +195,13 @@ export default function PedidoPage() {
   const cantinaPhone = process.env.NEXT_PUBLIC_WHATSAPP_PHONE ?? "";
 
   const [location, setLocation] = useState<OrderLocation | null>(null);
+
+  const [praiaReference, setPraiaReference] = useState("");
+  const [cantinaFulfillment, setCantinaFulfillment] = useState<
+    "retirar" | "entregar"
+  >("retirar");
+  const [deliveryStreet, setDeliveryStreet] = useState("");
+  const [deliveryNumber, setDeliveryNumber] = useState("");
 
   const [name, setName] = useState("");
   const [query, setQuery] = useState("");
@@ -213,6 +251,10 @@ export default function PedidoPage() {
       return;
     }
     setLocation(selected);
+
+    if (selected === "cantina") {
+      setCantinaFulfillment("retirar");
+    }
   }, [router]);
 
   const normalizedQuery = query.trim().toLowerCase();
@@ -269,10 +311,34 @@ export default function PedidoPage() {
 
   const whatsText = useMemo(() => {
     if (!location) return "";
-    return buildWhatsAppText(location, name, lines, total);
-  }, [location, name, lines, total]);
+    return buildWhatsAppText(
+      location,
+      name,
+      {
+        praiaReference,
+        cantinaFulfillment,
+        deliveryStreet,
+        deliveryNumber,
+      },
+      lines,
+      total,
+    );
+  }, [
+    location,
+    name,
+    lines,
+    total,
+    praiaReference,
+    cantinaFulfillment,
+    deliveryStreet,
+    deliveryNumber,
+  ]);
 
-  const canSend = name.trim().length > 0 && lines.length > 0;
+  const needsAddress = location === "cantina" && cantinaFulfillment === "entregar";
+  const hasAddress =
+    deliveryStreet.trim().length > 0 && deliveryNumber.trim().length > 0;
+  const canSend =
+    name.trim().length > 0 && lines.length > 0 && (!needsAddress || hasAddress);
 
   if (!menu || !location) return null;
 
@@ -310,7 +376,7 @@ export default function PedidoPage() {
         </header>
 
         <section className="mt-6 grid gap-6 lg:grid-cols-[1fr,360px]">
-          <div className="rounded-[2rem] border border-border bg-card p-5 sm:p-6">
+          <div className="rounded-4xl border border-border bg-card p-5 sm:p-6">
             <h2 className="text-sm font-semibold text-foreground">Dados do pedido</h2>
 
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -339,6 +405,90 @@ export default function PedidoPage() {
                 </span>
               </label>
             </div>
+
+            {location === "praia" ? (
+              <div className="mt-4">
+                <label className="grid gap-2">
+                  <span className="text-sm font-semibold text-foreground">
+                    Pontos de referência (para te encontrarmos na praia)
+                  </span>
+                  <textarea
+                    value={praiaReference}
+                    onChange={(e) => setPraiaReference(e.target.value)}
+                    placeholder="Ex.: em frente a tenda, perto da rampa, x pessoas no guarda sol..."
+                    rows={3}
+                    className="w-full resize-y rounded-2xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary/40"
+                  />
+                  <span className="text-xs text-muted-foreground">
+                    Quanto mais detalhes, mais rápido a entrega chega até você.
+                  </span>
+                </label>
+              </div>
+            ) : null}
+
+            {location === "cantina" ? (
+              <div className="mt-4 rounded-3xl border border-border bg-background/60 p-4">
+                <p className="text-sm font-semibold text-foreground">
+                  Retirada ou entrega
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Entregamos somente dentro do condomínio.
+                </p>
+
+                <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                  <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 text-sm font-semibold text-foreground">
+                    <input
+                      type="radio"
+                      name="fulfillment"
+                      value="retirar"
+                      checked={cantinaFulfillment === "retirar"}
+                      onChange={() => setCantinaFulfillment("retirar")}
+                      className="h-4 w-4"
+                    />
+                    Vou retirar na cantina
+                  </label>
+
+                  <label className="flex cursor-pointer items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 text-sm font-semibold text-foreground">
+                    <input
+                      type="radio"
+                      name="fulfillment"
+                      value="entregar"
+                      checked={cantinaFulfillment === "entregar"}
+                      onChange={() => setCantinaFulfillment("entregar")}
+                      className="h-4 w-4"
+                    />
+                    Quero entrega
+                  </label>
+                </div>
+
+                {cantinaFulfillment === "entregar" ? (
+                  <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                    <label className="grid gap-2 sm:col-span-1">
+                      <span className="text-sm font-semibold text-foreground">Rua</span>
+                      <input
+                        value={deliveryStreet}
+                        onChange={(e) => setDeliveryStreet(e.target.value)}
+                        placeholder="Ex.: Rua das Palmeiras"
+                        className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary/40"
+                      />
+                    </label>
+
+                    <label className="grid gap-2 sm:col-span-1">
+                      <span className="text-sm font-semibold text-foreground">Número</span>
+                      <input
+                        value={deliveryNumber}
+                        onChange={(e) => setDeliveryNumber(e.target.value)}
+                        placeholder="Ex.: 123"
+                        className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-primary/40"
+                      />
+                      <span className="text-xs text-muted-foreground">
+                        Obrigatório para pedidos com entrega.
+                      </span>
+                    </label>
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
 
             <div className="mt-6 rounded-3xl border border-border bg-muted/30 p-4">
               <p className="text-sm text-muted-foreground">
@@ -460,7 +610,7 @@ export default function PedidoPage() {
             </div>
           </div>
 
-          <aside className="h-fit rounded-[2rem] border border-border bg-card p-5 sm:p-6">
+          <aside className="h-fit rounded-4xl border border-border bg-card p-5 sm:p-6">
             <h2 className="text-sm font-semibold text-foreground">Resumo</h2>
 
             <div className="mt-4 flex items-baseline justify-between gap-4">
@@ -482,8 +632,12 @@ export default function PedidoPage() {
 
             <div className="mt-5 rounded-3xl border border-border bg-background/60 p-4">
               <p className="text-xs font-semibold text-muted-foreground">Mensagem</p>
-              <pre className="mt-2 max-h-56 overflow-auto whitespace-pre-wrap break-words text-sm text-foreground">
-                {canSend ? whatsText : "Preencha seu nome e selecione ao menos 1 item."}
+              <pre className="mt-2 max-h-56 overflow-auto whitespace-pre-wrap wrap-break-word text-sm text-foreground">
+                {canSend
+                  ? whatsText
+                  : needsAddress
+                    ? "Para entrega, informe Rua e Número (e selecione ao menos 1 item)."
+                    : "Preencha seu nome e selecione ao menos 1 item."}
               </pre>
             </div>
 
