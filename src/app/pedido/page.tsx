@@ -139,7 +139,7 @@ function buildWhatsAppText(
 ): string {
   const safeName = name.trim();
 
-  const where = location === "praia" ? "na praia" : "na cantina/casa";
+  const where = location === "praia" ? "na praia" : "na cantina";
   const header = `Olá, estou fazendo um pedido ${where}, sou ${safeName} e vou querer:`;
 
   const details: string[] = [];
