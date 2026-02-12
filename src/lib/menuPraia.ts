@@ -24,7 +24,7 @@ const praiaBebidas: MenuItem[] = [
   },
   {
     name: "Cerveja long neck",
-    price: "R$ 13,00",
+    price: "R$ 14,00",
     imageSrc: "/Itens/cerveja-long-neck.png",
     category: "bebidas",
     options: ["Heineken", "Original", "Malzbier"],
@@ -45,14 +45,14 @@ const praiaBebidas: MenuItem[] = [
   },
   {
     name: "Gatorade",
-    price: "R$ 9,00",
+    price: "R$ 10,00",
     imageSrc: "/Itens/gatorade.png",
     category: "bebidas",
     options: ["Azul", "Vermelho"],
   },
   {
     name: "H2O",
-    price: "R$ 9,00",
+    price: "R$ 10,00",
     imageSrc: "/Itens/h2o.jpg",
     category: "bebidas",
     options: ["Limoneto", "Normal"],
