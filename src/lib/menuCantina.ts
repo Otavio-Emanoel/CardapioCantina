@@ -385,7 +385,7 @@ const cantinaPorcoesExtras: MenuItem[] = [
   },
   {
     name: "Salmão",
-    price: priceBRL(25),
+    price: priceBRL(28),
     imageSrc: "/cantina/salmao.png",
     category: "porcoes_extras",
   },
@@ -511,13 +511,13 @@ const cantinaBebidas: MenuItem[] = [
   },
   {
     name: "Água com gás",
-    price: priceBRL(5),
+    price: priceBRL(6),
     imageSrc: "/Itens/agua.webp",
     category: "bebidas",
   },
   {
     name: "H2O",
-    price: priceBRL(9),
+    price: priceBRL(10),
     imageSrc: "/Itens/h2o.jpg",
     category: "bebidas",
   },
@@ -535,7 +535,7 @@ const cantinaBebidas: MenuItem[] = [
   },
   {
     name: "Gatorade",
-    price: priceBRL(9),
+    price: priceBRL(10),
     imageSrc: "/Itens/gatorade.png",
     category: "bebidas",
   },
@@ -558,8 +558,8 @@ const cantinaBebidas: MenuItem[] = [
     category: "bebidas",
   },
   {
-    name: "Suco de Poupa",
-    price: priceBRL(12),
+    name: "Suco de Polpa",
+    price: priceBRL(15),
     imageSrc: "/cantina/suco-poupa.png",
     category: "bebidas",
   },
@@ -583,7 +583,7 @@ const cantinaBebidas: MenuItem[] = [
   },
   {
     name: "Heineken Long Neck",
-    price: priceBRL(12),
+    price: priceBRL(13),
     imageSrc: "/Itens/cerveja-long-neck.png",
     category: "bebidas",
   },
