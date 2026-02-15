@@ -607,13 +607,13 @@ const cantinaBebidas: MenuItem[] = [
   },
   {
     name: "Caipirinha de Pinga",
-    price: priceBRL(25),
+    price: priceBRL(30),
     imageSrc: "/Itens/caipirinha-de-pinga.png",
     category: "bebidas",
   },
   {
     name: "Caipirinha de Sake",
-    price: priceBRL(28),
+    price: priceBRL(30),
     imageSrc: "/cantina/sake.png",
     category: "bebidas",
   },
