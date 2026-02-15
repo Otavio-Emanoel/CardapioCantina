@@ -31,7 +31,7 @@ const praiaBebidas: MenuItem[] = [
   },
   {
     name: "Caipirinha de pinga",
-    price: "R$ 26,00",
+    price: "R$ 30,00",
     imageSrc: "/Itens/caipirinha-de-pinga.png",
     category: "bebidas",
     options: ["Morango", "Limão"],
